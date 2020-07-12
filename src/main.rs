@@ -92,7 +92,7 @@ transitions!(State,
 
 methods!(State,
 [
-    Searching, AvoidingBack, AvoidingTurn, AvoidingAdvance, Found => fn process(&self) -> Device
+    Searching, AvoidingBack, AvoidingTurn, AvoidingAdvance, Found => fn update(&self) -> Device
 ]);
 
 fn is_yellow(c: (i32, i32, i32)) -> bool {
@@ -127,7 +127,7 @@ impl Searching {
         State::searching(world)
     }
 
-    pub fn process(&self) -> Device {
+    pub fn update(&self) -> Device {
         Device {
             left: FORWARD_SPEED,
             right: FORWARD_SPEED,
@@ -149,7 +149,7 @@ impl AvoidingBack {
         }
     }
 
-    pub fn process(&self) -> Device {
+    pub fn update(&self) -> Device {
         Device {
             left: BACKWARD_SPEED,
             right: BACKWARD_SPEED,
@@ -167,7 +167,7 @@ impl AvoidingTurn {
         State::avoidingadvance(0, world)
     }
 
-    pub fn process(&self) -> Device {
+    pub fn update(&self) -> Device {
         Device {
             left: 0,
             right: 0,
@@ -193,7 +193,7 @@ impl AvoidingAdvance {
         }
     }
 
-    pub fn process(&self) -> Device {
+    pub fn update(&self) -> Device {
         if self.last_tick() {
             Device {
                 left: 0,
@@ -216,7 +216,7 @@ impl AvoidingAdvance {
  * When in found state just play a sound
  */
 impl Found {
-    pub fn process(&self) -> Device {
+    pub fn update(&self) -> Device {
         Device {
             left: 0,
             right: 0,
@@ -259,7 +259,7 @@ fn main() -> Ev3Result<()> {
         tick += 1;
 
         // Get the state's device update
-        let device_result = state.process();
+        let device_result = state.update();
 
         match device_result {
             Some(device) => {
