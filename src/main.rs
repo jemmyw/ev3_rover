@@ -1,3 +1,9 @@
+/**
+ * Rover program
+ *
+ * Goal: find the yellow spot on the floor
+ * Search pattern: Drive forward. If an obstacle is reached reverse, turn wheels, advance, straighten.
+ */
 extern crate ev3dev_lang_rust;
 #[macro_use]
 extern crate machine;
@@ -21,6 +27,7 @@ use std::time::Duration;
 static MAX_COL: i32 = 1020;
 static FORWARD_SPEED: i32 = -50;
 static BACKWARD_SPEED: i32 = 50;
+static TOO_CLOSE: i32 = 25;
 // Tick length
 static TIMEOUT: Duration = Duration::from_millis(250);
 
@@ -113,7 +120,7 @@ impl Searching {
             return State::found();
         }
 
-        if world.distance < 25 || world.touched {
+        if world.distance < TOO_CLOSE || world.touched {
             return State::avoidingback(0, world);
         }
 
